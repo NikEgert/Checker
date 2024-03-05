@@ -142,10 +142,12 @@ public class Checkers {
     /**
      * Checks if a move is valid.
      */
-    private static boolean isValidMove(coordsList) {
+    private static boolean isValidMove(ArrayList<Integer> coordsList) {
         // Implement this method to check if a move is legal according to the rules of
         // Checkers.
-        if (board[coordsList[0]][coordsList[1]] == 'w'|| board[coordsList[0]][coordsList[1]] == 'b'){
+        System.out.println(board[coordsList.get(0)][coordsList.get(1)]);
+
+        if (board[coordsList.get(0)][coordsList.get(1)] == 'w'|| board[coordsList.get(1)][coordsList.get(2)] == 'b'){
             return true;
         }
         return false;
