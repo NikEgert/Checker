@@ -128,7 +128,7 @@ public class Checkers {
                         }
                         if (isValidMove(coordsList)){
                             board[coordsList.get(0)][coordsList.get(1)] = ' ';
-                            board[coordsList.get(0)][coordsList.get(1)] = 'w';
+                            board[coordsList.get(2)][coordsList.get(3)] = 'w';
                         }coordsList.clear();
                     }catch(Exception e){
                         return false;
@@ -145,23 +145,48 @@ public class Checkers {
      * Checks if a move is valid.
      */
     private static boolean isValidMove(ArrayList<Integer> coordsList) {
-        // Implement this method to check if a move is legal according to the rules of
-        // Checkers.
-        System.out.println(coordsList.toString());
 
+        int x1 = coordsList.get(0);
+        int y1 = coordsList.get(1);
+        int x2 = coordsList.get(2);
+        int y2 = coordsList.get(3);
+
+        int xDistance = Math.abs(x1 - x2);
+        int yDistance = Math.abs(y1 - y2);
+
+        System.out.println("xD: " + xDistance);
+        System.out.println("yD: " + yDistance);
+
+        
         //white's turn
-        if (board[coordsList.get(0)][coordsList.get(1)] == 'w' && board[coordsList.get(1)][coordsList.get(2)] == ' '){
-            System.out.println("TRUE");
-            return true;
-        }
-        //black's turn
-        // if(board[coordsList.get(0)][coordsList.get(1)] == 'b' && board[coordsList.get(1)][coordsList.get(2)] == ' '){
-        //     System.out.println("TRUE");
-        //     return true;
-        // }
+        if(board[x2][y2] == ' '){
 
-        System.out.println("FALSE");
-        return false;
+            if (xDistance == 1 || yDistance == 1){
+                System.out.println("true 1");
+                return true;
+    
+            }else if (xDistance == 2 || yDistance == 2){
+                if (board[x1][y1] == 'w' && board[x2][y2] == ' '){
+                    int midX = (x1 + x2) / 2;
+                    int midY = (y1 + y2) / 2; 
+                    if (board[midX][midY] != ' '){
+                        System.out.println("true 2");
+                        return true;
+                    }else{
+                        System.out.println("true 3");
+                        return true;
+                    }
+                }
+            }else{
+                System.out.println("false 1");
+                return false;
+            }
+        }else{
+            System.out.println("false 2");
+            return false;
+        }
+    System.out.println("false 3");
+    return false;
     }
 
     /**
