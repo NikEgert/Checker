@@ -1,5 +1,4 @@
 import java.util.*;
-import java.util.HashMap;
 
 public class Checkers {
 
@@ -32,14 +31,14 @@ public class Checkers {
             {'w', ' ', 'w', ' ', 'w', ' ', 'w', ' '},
         };
 
-        coords.put('A', 0);
-        coords.put('B', 1);
-        coords.put('C', 2);
-        coords.put('D', 3);
-        coords.put('E', 4);
-        coords.put('F', 5);
-        coords.put('G', 6);
-        coords.put('H', 7);
+        coords.put('A', 7);
+        coords.put('B', 6);
+        coords.put('C', 5);
+        coords.put('D', 4);
+        coords.put('E', 3);
+        coords.put('F', 2);
+        coords.put('G', 1);
+        coords.put('H', 0);
 
         coords.put('1', 0);
         coords.put('2', 1);
@@ -73,19 +72,20 @@ public class Checkers {
     private static void startGame() {
         // Implement the game loop, handling player input, turn switching, and win
         // condition checking.
-        Scanner scan = new Scanner(System.in);
-
-        while(true){
-            String input = scan.nextLine();
-            if (!input.equals("exit")) {
-                processMove(input);
-                displayBoard();
-            }else if(input.equals("view")){
-                displayBoard();
+        try (
+        Scanner scan = new Scanner(System.in)) {
+            while(true){
+                String input = scan.nextLine();
+                if (!input.equals("exit")) {
+                    processMove(input, board);
+                    displayBoard();
+                }else if(input.equals("view")){
+                    displayBoard();
+                }
+                else{
+                    System.exit(0);
+                } 
             }
-            else{
-                System.exit(0);
-            } 
         }
     }
 
@@ -95,11 +95,14 @@ public class Checkers {
      * @param move A string representing the player's move (e.g., "C3 to D4").
      * @return true if the move is valid and executed, false otherwise.
      */
-    private static boolean processMove(String move) {
+    private static boolean processMove(String move, char[][] board) {
         try {
+            // makes the move inputted into a list
             String moveFiltered = move.replace(" to", "");
+
             if (!move.equals(moveFiltered)){
                 String[] moveArray = moveFiltered.split(" ");
+
                 // check if two placements are given
                 if (moveArray.length < 3) {
                     String s = "";
@@ -108,33 +111,32 @@ public class Checkers {
                     }
                     char[] c = s.toCharArray();
 
-                    if (!Character.isUpperCase(c[0]) || !Character.isUpperCase(c[2])){
-                        System.out.println("Incorrect input!");
-                    }else{
-                        try{
-                            for (Character e: c){
-                                coordsList.add(coords.get(e));
-                            }
+                    for(int i = 0; i < c.length; i++) {
+                        c[i] = Character.toUpperCase(c[i]);
+                    }
 
-                            for (Integer j: coordsList){
-                                if(j == null){
-                                    System.out.println("Incorrect input!");
-                                    return false;
-                                }
-                            isValidMove(coordsList);
-                            }
-
-                        }catch (Exception e){
-                            System.out.println("Incorrect input!");
+                    try{
+                        for (Character e: c){
+                            coordsList.add(coords.get(e));
                         }
+
+                        for (Integer j: coordsList){
+                            if(j == null){
+                                System.out.println("Incorrect input!");
+                                return false;
+                            }
+                        }
+                        if (isValidMove(coordsList)){
+                            board[coordsList.get(0)][coordsList.get(1)] = ' ';
+                            board[coordsList.get(0)][coordsList.get(1)] = 'w';
+                        }coordsList.clear();
+                    }catch(Exception e){
+                        return false;
                     }
                 }
-                return true;
-            }else{
-                System.out.println("Incorrect input!");
             }
-        } catch (Exception e) {
-            System.out.println("Incorrect input!");
+        }catch(Exception e){
+            return false;
         }
         return false;
     }
@@ -145,11 +147,20 @@ public class Checkers {
     private static boolean isValidMove(ArrayList<Integer> coordsList) {
         // Implement this method to check if a move is legal according to the rules of
         // Checkers.
-        System.out.println(board[coordsList.get(0)][coordsList.get(1)]);
+        System.out.println(coordsList.toString());
 
-        if (board[coordsList.get(0)][coordsList.get(1)] == 'w'|| board[coordsList.get(1)][coordsList.get(2)] == 'b'){
+        //white's turn
+        if (board[coordsList.get(0)][coordsList.get(1)] == 'w' && board[coordsList.get(1)][coordsList.get(2)] == ' '){
+            System.out.println("TRUE");
             return true;
         }
+        //black's turn
+        // if(board[coordsList.get(0)][coordsList.get(1)] == 'b' && board[coordsList.get(1)][coordsList.get(2)] == ' '){
+        //     System.out.println("TRUE");
+        //     return true;
+        // }
+
+        System.out.println("FALSE");
         return false;
     }
 
